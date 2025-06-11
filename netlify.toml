@@ -1,0 +1,29 @@
+# netlify.toml
+
+[build]
+  # The command Eleventy uses to build your site.
+  # This command will first run `npm run build:react` and then `eleventy`.
+  command = "npm run build"
+
+  # The directory Eleventy outputs to, which Netlify will deploy.
+  publish = "_site"
+
+# Essential for Netlify CMS and client-side routing with React
+# This rule rewrites all non-file requests to index.html,
+# allowing your React app to handle client-side routing.
+# It's crucial for pages like /quizzes, /about, /contact etc.,
+# if accessed directly.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = true # Ensures this redirect takes precedence
+
+# Settings for Netlify Identity, essential for Netlify CMS authentication
+# Make sure to enable Netlify Identity in your Netlify site settings dashboard
+# under Site settings > Identity.
+[functions]
+  # This is usually where you'd define serverless functions if you had them.
+  # For Netlify CMS, Netlify handles identity functions automatically
+  # but this section is good to have for future extensibility.
+  # An empty functions section is fine if you don't have custom functions yet.

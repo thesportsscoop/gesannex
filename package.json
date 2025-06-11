@@ -1,22 +1,33 @@
 {
   "name": "ges-annex-website",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
+  "description": "",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "scripts": {
+    "start": "npm run build:react && eleventy --serve",
+    "build": "npm run build:react && eleventy",
+    "build:react": "react-scripts build",
+    "test:react": "react-scripts test",
+    "eject:react": "react-scripts eject",
+    "test": "react-scripts test"
+  },
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "firebase": "^11.9.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.1"
   },
   "eslintConfig": {
     "extends": [

@@ -1,0 +1,21 @@
+backend:
+  name: git-gateway # Allows Netlify Identity to manage Git access
+  branch: main # Branch to publish to, typically 'main' or 'master'
+
+publish_mode: editorial_workflow # Enable drafts and publishing flow
+
+media_folder: "public/images" # Where user uploaded media files will be stored (relative to the site root)
+public_folder: "/images" # The public path to the media folder (relative to the site root)
+
+collections:
+  - name: "news" # A label for the collection
+    label: "News Articles" # The name for the collection in the CMS UI
+    folder: "_news" # The path to the folder where markdown files will be stored (relative to site root)
+    create: true # Allow users to create new documents in this collection
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # Filename template for new posts
+    fields: # The fields for each document, corresponding to your news article front matter
+      - {label: "Title", name: "title", widget: "string", required: true}
+      - {label: "Publish Date", name: "date", widget: "datetime", required: true, format: "YYYY-MM-DD HH:mm:ss"}
+      - {label: "Body", name: "body", widget: "markdown", required: true}
+      - {label: "Featured Image", name: "image", widget: "image", required: false}
+      - {label: "Image Alt Text", name: "imageAlt", widget: "string", required: false}
