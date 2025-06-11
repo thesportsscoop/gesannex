@@ -9,14 +9,14 @@ module.exports = function(eleventyConfig) {
   // Also copy the Netlify CMS admin folder
   eleventyConfig.addPassthroughCopy("admin");
 
-  // IMPORTANT FIX: Prevent Eleventy from processing files in the 'public' directory as templates.
-  // Instead, copy the 'public' folder directly as static assets.
-  // This resolves the "[11ty] Writing ./_site/public/index.html from ./public/index.html (njk)" issue.
+  // IMPORTANT FIX: Copy the 'public' directory directly as static assets.
+  // This prevents Eleventy from trying to process files inside 'public' as templates,
+  // which was leading to the incorrect index.html being written to _site/public/.
   eleventyConfig.addPassthroughCopy("public");
 
   return {
     dir: {
-      input: ".", // Eleventy will still look for content in the current directory
+      input: ".", // Eleventy will look for content in the current directory
       output: "_site" // The default output directory for Eleventy
     },
     // Keep template formats. The addPassthroughCopy for 'public' should handle preventing processing.
