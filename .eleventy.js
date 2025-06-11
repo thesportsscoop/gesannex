@@ -9,14 +9,18 @@ module.exports = function(eleventyConfig) {
   // Also copy the Netlify CMS admin folder
   eleventyConfig.addPassthroughCopy("admin");
 
+  // IMPORTANT FIX: Prevent Eleventy from processing files in the 'public' directory as templates.
+  // Instead, copy the 'public' folder directly as static assets.
+  // This resolves the "[11ty] Writing ./_site/public/index.html from ./public/index.html (njk)" issue.
+  eleventyConfig.addPassthroughCopy("public");
+
   return {
     dir: {
-      input: ".", // Eleventy will still look for content in the current directory if you have other Eleventy content
+      input: ".", // Eleventy will still look for content in the current directory
       output: "_site" // The default output directory for Eleventy
     },
-    // Keep template formats for potential other Eleventy content if you add them later.
-    // For the main app page, it's now directly copying React's HTML.
-    templateFormats: ["html", "njk", "md"],
+    // Keep template formats. The addPassthroughCopy for 'public' should handle preventing processing.
+    templateFormats: ["html", "njk", "md"], // 'html' is kept for other potential Eleventy HTML templates
     markdownTemplateEngine: "njk",
     htmlTemplateEngine: "njk",
     dataTemplateEngine: "njk"
