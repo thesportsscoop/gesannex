@@ -2,29 +2,41 @@
   "name": "ges-annex-website",
   "version": "1.0.0",
   "private": true,
-  "description": "",
+  "description": "GES Annex - Educational Portal with Eleventy and React",
   "main": "index.js",
   "author": "",
   "license": "ISC",
   "keywords": [],
   "scripts": {
+    // Start a local dev server (build React, then Eleventy with server)
     "start": "npm run build:react && eleventy --serve",
-    "build": "npm run build:react && eleventy",
+
+    // Build the entire site (React + Eleventy + Copy React build to _site)
+    "build": "npm run build:react && eleventy && npm run copy-react",
+
+    // Build React app
     "build:react": "react-scripts build",
+
+    // Copy React build output into Eleventy's output folder (_site)
+    "copy-react": "cp -r build/* _site/",
+
+    // Run tests
+    "test": "react-scripts test",
     "test:react": "react-scripts test",
-    "eject:react": "react-scripts eject",
-    "test": "react-scripts test"
+
+    // Eject React scripts (use with caution)
+    "eject:react": "react-scripts eject"
   },
   "dependencies": {
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^13.5.0",
     "firebase": "^11.9.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^13.5.0"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.1.1"
