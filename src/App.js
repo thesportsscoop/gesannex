@@ -2,30 +2,14 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { initializeApp } from 'firebase/app';
 import {
   getAuth,
-  signInWithCustomToken, // Kept for potential future use or if a custom token is needed for advanced auth
   signInAnonymously,
   onAuthStateChanged,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
 } from 'firebase/auth';
 import {
   getFirestore,
-  doc,
-  getDoc,
-  setDoc,
-  addDoc,
-  collection,
-  query,
-  where,
-  onSnapshot,
-  updateDoc,
-  deleteDoc,
-  getDocs,
 } from 'firebase/firestore';
 
 // Firebase configuration using Netlify environment variables
-// These variables will be set in your Netlify site settings
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -36,13 +20,10 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
-// Using projectId as appId for consistency with Firestore paths
 const appId = process.env.REACT_APP_FIREBASE_PROJECT_ID || 'default-app-id';
-
-// initialAuthToken is specific to the Canvas environment and is not used in standard deployments
 const initialAuthToken = null;
 
-// Firebase Context to provide db, auth, and user info throughout the app
+// Firebase Context
 const FirebaseContext = createContext(null);
 
 const FirebaseProvider = ({ children }) => {
@@ -54,8 +35,6 @@ const FirebaseProvider = ({ children }) => {
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    // Initialize Firebase app only once if config is available
-    // Ensure that process.env variables are available (they become available during React build)
     const isConfigComplete = Object.values(firebaseConfig).every(val => val !== undefined && val !== null);
 
     if (!app && isConfigComplete) {
@@ -69,40 +48,35 @@ const FirebaseProvider = ({ children }) => {
         setLoadingFirebase(false);
       }
     } else if (!isConfigComplete) {
-      console.warn("Firebase config is incomplete. Please ensure all REACT_APP_FIREBASE_ variables are set in Netlify.");
-      setLoadingFirebase(false); // Stop loading if config is missing
+      console.warn("Firebase config is incomplete.");
+      setLoadingFirebase(false);
     }
-  }, [app, firebaseConfig]);
+  }, [app]);
 
   useEffect(() => {
     if (auth) {
-      // Listen for auth state changes
       const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
         if (currentUser) {
           setUser(currentUser);
           setUserId(currentUser.uid);
         } else {
-          // If no user, try to sign in anonymously.
-          // initialAuthToken is no longer relevant for Netlify deployments here.
           try {
             await signInAnonymously(auth);
             setUser(auth.currentUser);
             setUserId(auth.currentUser.uid);
           } catch (error) {
             console.error("Authentication failed:", error);
-            // Fallback to a random ID if anonymous sign-in also fails
             setUserId(crypto.randomUUID());
           }
         }
         setLoadingFirebase(false);
       });
 
-      return () => unsubscribe(); // Cleanup auth listener
-    } else if (!loadingFirebase && !auth && Object.keys(firebaseConfig).every(val => val !== undefined && val !== null)) {
-      // If auth isn't initialized but config exists, means an issue, fall back to random ID
+      return () => unsubscribe();
+    } else if (!loadingFirebase && !auth) {
       setUserId(crypto.randomUUID());
     }
-  }, [auth, loadingFirebase, firebaseConfig]); // Removed initialAuthToken from dependencies as it's null
+  }, [auth, loadingFirebase]);
 
   if (loadingFirebase) {
     return (
@@ -119,11 +93,9 @@ const FirebaseProvider = ({ children }) => {
   );
 };
 
-// Custom hook to use Firebase context
 const useFirebase = () => useContext(FirebaseContext);
 
-
-// Reusable Modal Component
+// Modal Component
 const Modal = ({ show, onClose, title, children }) => {
   if (!show) return null;
 
@@ -150,10 +122,10 @@ const Modal = ({ show, onClose, title, children }) => {
   );
 };
 
-
 // Home Component
 const Home = () => {
-  const { userId } = useFirebase(); // Get userId from context
+  const { userId } = useFirebase();
+
   return (
     <section id="home" className="py-16 px-4 md:px-8 lg:px-16 text-center bg-white text-gray-800">
       <h2 className="text-4xl md:text-5xl font-extrabold text-sky-700 mb-6 leading-tight">
@@ -173,4 +145,25 @@ const Home = () => {
           <p className="text-gray-700">Access well-structured learning content tailored for each academic level.</p>
         </div>
         <div className="p-6 bg-blue-50 rounded-xl shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-lg">
-          <h3 classNam
+          <h3 className="text-2xl font-bold text-sky-700 mb-3">Latest Education News</h3>
+          <p className="text-gray-700">Stay updated with important news, events, and announcements in the education sector.</p>
+        </div>
+        <div className="p-6 bg-blue-50 rounded-xl shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-lg">
+          <h3 className="text-2xl font-bold text-sky-700 mb-3">Interactive Quizzes</h3>
+          <p className="text-gray-700">Test your knowledge with engaging and timed quizzes across subjects.</p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Main App
+const App = () => {
+  return (
+    <FirebaseProvider>
+      <Home />
+    </FirebaseProvider>
+  );
+};
+
+export default App;
