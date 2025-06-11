@@ -11,7 +11,7 @@
     "start": "npm run build:react && eleventy --serve",
     "build": "npm run build:react && eleventy && npm run copy-react",
     "build:react": "react-scripts build",
-    "copy-react": "cp -r build/* _site/",
+    "copy-react": "shx cp -r build/* _site/",
     "test": "react-scripts test",
     "test:react": "react-scripts test",
     "eject:react": "react-scripts eject"
@@ -28,7 +28,8 @@
     "@testing-library/user-event": "^13.5.0"
   },
   "devDependencies": {
-    "@11ty/eleventy": "^3.1.1"
+    "@11ty/eleventy": "^3.1.1",
+    "shx": "^0.3.4"
   },
   "eslintConfig": {
     "extends": [
