@@ -1,15 +1,9 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { initializeApp } from 'firebase/app';
-import {
-  getAuth,
-  signInAnonymously,
-  onAuthStateChanged,
-} from 'firebase/auth';
-import {
-  getFirestore,
-} from 'firebase/firestore';
+import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
-// Firebase configuration using Netlify environment variables
+// Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -21,7 +15,6 @@ const firebaseConfig = {
 };
 
 const appId = process.env.REACT_APP_FIREBASE_PROJECT_ID || 'default-app-id';
-const initialAuthToken = null;
 
 // Firebase Context
 const FirebaseContext = createContext(null);
@@ -95,33 +88,6 @@ const FirebaseProvider = ({ children }) => {
 
 const useFirebase = () => useContext(FirebaseContext);
 
-// Modal Component
-const Modal = ({ show, onClose, title, children }) => {
-  if (!show) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-auto overflow-hidden">
-        <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-sky-700 text-white rounded-t-lg">
-          <h3 className="text-lg font-bold">{title}</h3>
-          <button onClick={onClose} className="text-white hover:text-gray-200 text-2xl leading-none">&times;</button>
-        </div>
-        <div className="p-6">
-          {children}
-        </div>
-        <div className="p-4 border-t border-gray-200 text-right">
-          <button
-            onClick={onClose}
-            className="px-6 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition duration-300 shadow-md"
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 // Home Component
 const Home = () => {
   const { userId } = useFirebase();
@@ -157,7 +123,6 @@ const Home = () => {
   );
 };
 
-// Main App
 const App = () => {
   return (
     <FirebaseProvider>
