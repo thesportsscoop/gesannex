@@ -1,20 +1,15 @@
 # netlify.toml
 
 [build]
-  # The command Eleventy uses to build your site.
-  # This command will first run `npm run build:react` and then `eleventy`.
+  # Build command: first build React, then Eleventy, then copy React output into Eleventy output
   command = "npm run build"
-
-  # The directory Eleventy outputs to, which Netlify will deploy.
+  
+  # Publish directory: where Eleventy outputs the static site
   publish = "_site"
 
-# Essential for Netlify CMS and client-side routing with React
-# This rule rewrites all non-file requests to index.html,
-# allowing your React app to handle client-side routing.
-# It's crucial for pages like /quizzes, /about, /contact etc.,
-# if accessed directly.
+# Redirect rule: allows React client-side routing to work (e.g., /quizzes, /about)
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  force = true # Ensures this redirect takes precedence
+  force = true
